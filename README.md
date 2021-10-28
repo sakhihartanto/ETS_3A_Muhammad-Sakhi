@@ -1,4 +1,4 @@
-# ETS 3A Muhammad-Sakhi-Hartanto
+# ETS 3A Muhammad Sakhi Hartanto ( 191524030 )
 
 Project ini merupakan project Full-Stack Developer yang ditujukan untuk Evaluasi Tengah Semester mata kuliah Web Development.
 
