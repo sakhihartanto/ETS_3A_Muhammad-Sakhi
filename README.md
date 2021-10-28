@@ -10,7 +10,7 @@ Project ini merupakan project Full-Stack Developer yang ditujukan untuk Evaluasi
 
 ## Installation Front-end
 
-Untuk project setup Vue maka coba ke folder : 
+Untuk project setup Vue maka ke folder : 
 ```bash
 cd client 
 ```
@@ -18,8 +18,18 @@ Lalu Lakukan :
 ```bash
 npm install
 ```
+## Installation Back-end
 
-## Run It !
+Untuk project setup Node Express maka ke folder : 
+```bash
+cd server
+```
+Lalu Lakukan : 
+```bash
+npm install
+```
+
+## Run Front-end
 ### Compiles and hot-reloads for development
 ```
 npm run serve
@@ -40,6 +50,11 @@ npm run test
 npm run lint
 ```
 
+## Run Back-end
+
+```
+nodemon index.js
+```
 
 ## Contributor
 1. Muhammad Sakhi Hartanto 
