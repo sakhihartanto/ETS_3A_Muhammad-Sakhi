@@ -37,52 +37,69 @@
               This Country is {{ item.country }}
             </td>
           </template>
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
-            <v-dialog v-model="dialog" max-width="500px"> 
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.country"
-                      label="Country Name"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-              <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
-            </v-card-actions>
-            </v-dialog>
-          </v-card>
           <template v-slot:top>
-            <v-toolbar flat>
-              <v-dialog v-model="dialogDelete" max-width="500px">
-                <v-card>
-                  <v-card-title class="headline">Delete ?</v-card-title>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="closeDelete">Cancel</v-btn>
-                    <v-btn color="primary" @click="deleteItemConfirm"
-                      >Delete</v-btn
+            <div class="text-center">
+              <v-toolbar flat>
+                <v-divider class="mx-4" inset vertical> </v-divider>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="500px">
+                  <v-card>
+                    <v-card-title>
+                      <span class="text-h5">{{ formTitle }} </span>
+                    </v-card-title>
+                    <v-card-text>
+                      <v-container>
+                        <v-row>
+                          <v-col cols="12" sm="6" md="4">
+                            <v-text-field
+                              v-model="editedItem.country"
+                              label="Country Name"
+                            >
+                            </v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="blue darken-1" text @click="close">
+                        Cancel
+                      </v-btn>
+                      <v-btn color="blue darken-1" text @click="save">
+                        Save
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <v-dialog v-model="dialogDelete" max-width="500px" text-center>
+                  <v-card>
+                    <v-card-title
+                      class="headline text-center mx-auto"
+                      text-center
+                      >Delete ?</v-card-title
                     >
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-toolbar>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="primary" text @click="closeDelete"
+                        >Cancel</v-btn
+                      >
+                      <v-btn color="error" text @click="deleteItemConfirm"
+                        >Delete</v-btn
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-toolbar>
+            </div>
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editItem(item)">
-              mdi-pencil
-            </v-icon>
-            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+            <v-btn color="warning" fab x-small>
+            <v-icon small  @click="editItem(item)"> mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn color="error" fab x-small dark>
+              <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+            </v-btn>
           </template>
         </v-data-table>
       </v-col>
@@ -108,13 +125,13 @@ export default {
     country: [],
     editedIndex: -1,
     editedItem: {
-      country_id: "",
+      country: '',
     },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? "Edit Item" : "Edit Item";
     },
   },
 
@@ -129,8 +146,8 @@ export default {
 
   methods: {
     editItem(item) {
-      this.editedIndex = this.country.indexOf(item);
       this.editedItem = Object.assign({}, item);
+      this.editedIndex = this.country.indexOf(item);
       this.dialog = true;
     },
 
@@ -140,10 +157,9 @@ export default {
     },
 
     close() {
-      this.dialogDialog = false;
+      this.dialog = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
+        this.selectedItemIndex = -1;
       });
     },
 
@@ -169,12 +185,19 @@ export default {
     },
 
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.country[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
-      this.close();
+      const update = this.country[this.editedIndex];
+      const name = this.editedItem.country
+      axios
+        .put(`http://localhost:3000/api/country/${update.country_id}`, {country: name})
+        .then((response) => {
+          this.editItem(name)
+          this.close();
+          console.log("UPDATE SUCCESS", response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log("UPDATE GAGAL", error);
+        });
     },
   },
   mounted() {

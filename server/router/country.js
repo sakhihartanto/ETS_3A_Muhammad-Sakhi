@@ -25,6 +25,7 @@ router.put('/:country_id', async(req,res,next)=>{
         const sqlParams = [country.country, req.params.country_id]
         const result = (await db.query(sqlText,sqlParams)).rows
         res.json(result)
+        
     } catch (error) {
         console.error(error)
         next(error)
