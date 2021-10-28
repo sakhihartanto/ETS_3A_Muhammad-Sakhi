@@ -1,10 +1,11 @@
 <template>
     <div>
-        <v-app-bar dark>
+        <v-app-bar dark color="blue-grey darken-1">
             <v-app-bar-nav-icon  @click.stop="isDrawerOpen = !isDrawerOpen"></v-app-bar-nav-icon>
             <v-toolbar-title>Country Database</v-toolbar-title>
         </v-app-bar>
-        <v-navigation-drawer app dark temporary v-model ="isDrawerOpen">
+        <v-navigation-drawer app dark temporary v-model ="isDrawerOpen" src="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg"
+      width="20%" >
             <v-toolbar class="secondary">
                <v-toolbar-title class="title"> Menu</v-toolbar-title>
             </v-toolbar>
