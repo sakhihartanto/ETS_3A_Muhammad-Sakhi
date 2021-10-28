@@ -31,7 +31,6 @@ export default {
             isDrawerOpen: false,
             items: [
                 {icon: 'mdi-database', title: 'List Country', route:'/'},
-                {icon: 'mdi-text-box-plus', title: 'New Country', route: '/input-country'}
             ]
         }
     },

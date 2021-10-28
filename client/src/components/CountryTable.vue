@@ -2,6 +2,7 @@
   <v-container>
     <v-row align="center">
       <v-col cols="4">
+        <!-- Search Country -->
         <v-text-field
           v-model="search"
           single-line
@@ -9,6 +10,7 @@
         ></v-text-field>
       </v-col>
     </v-row>
+    <!-- Data Table Country -->
     <v-row>
       <v-col>
         <v-data-table
@@ -23,7 +25,7 @@
         >
           <template v-slot:top>
             <v-toolbar flat>
-              <v-toolbar-title>Expandable Table</v-toolbar-title>
+              <v-toolbar-title>Country Table</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-switch
                 v-model="singleExpand"
@@ -32,17 +34,37 @@
               ></v-switch>
             </v-toolbar>
           </template>
+
+          <!-- Single Expand Data Table Country -->
           <template v-slot:expanded-item="{ headers, item }">
             <td :colspan="headers.length">
               This Country is {{ item.country }}
             </td>
           </template>
+          <!-- Form Edit -->
           <template v-slot:top>
             <div class="text-center">
               <v-toolbar flat>
                 <v-divider class="mx-4" inset vertical> </v-divider>
                 <v-spacer></v-spacer>
                 <v-dialog v-model="dialog" max-width="500px">
+                  <template v-slot:activator="{ on, attrs }">
+                    <div class="text-center">
+                      <v-row align="center">
+                        <v-btn
+                          color="primary"
+                          dark
+                          class="mb-2"
+                          v-bind="attrs"
+                          v-on="on"
+                          rounded
+                          large
+                        >
+                          New Item
+                        </v-btn>
+                      </v-row>
+                    </div>
+                  </template>
                   <v-card>
                     <v-card-title>
                       <span class="text-h5">{{ formTitle }} </span>
@@ -71,6 +93,7 @@
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
+                <!-- Form Delete -->
                 <v-dialog v-model="dialogDelete" max-width="500px" text-center>
                   <v-card>
                     <v-card-title
@@ -92,10 +115,10 @@
               </v-toolbar>
             </div>
           </template>
-
-          <template v-slot:item.actions="{ item }">
+          <!-- Action -->
+          <template v-slot:[`item.actions`]="{ item }">
             <v-btn color="warning" fab x-small>
-            <v-icon small  @click="editItem(item)"> mdi-pencil</v-icon>
+              <v-icon small @click="editItem(item)"> mdi-pencil</v-icon>
             </v-btn>
             <v-btn color="error" fab x-small dark>
               <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
@@ -125,13 +148,16 @@ export default {
     country: [],
     editedIndex: -1,
     editedItem: {
-      country: '',
+      country: "",
+    },
+    defaultItem: {
+      country: "",
     },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "Edit Item" : "Edit Item";
+      return this.editedIndex === -1 ? "Insert Country" : "Edit Country";
     },
   },
 
@@ -186,18 +212,37 @@ export default {
 
     save() {
       const update = this.country[this.editedIndex];
-      const name = this.editedItem.country
-      axios
-        .put(`http://localhost:3000/api/country/${update.country_id}`, {country: name})
-        .then((response) => {
-          this.editItem(name)
-          this.close();
-          console.log("UPDATE SUCCESS", response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-          console.log("UPDATE GAGAL", error);
-        });
+      const name = this.editedItem.country;
+
+      if (this.editedIndex > -1) {
+        axios
+          .put(`http://localhost:3000/api/country/${update.country_id}`, {
+            country: name,
+          })
+          .then((response) => {
+            this.editItem(name);
+            this.close();
+            console.log("UPDATE SUCCESS", response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+            console.log("UPDATE GAGAL", error);
+          });
+      } else {
+        axios
+          .post(`http://localhost:3000/api/country/`, {
+            country: name,
+          })
+          .then((response) => {
+            this.country.push(this.editedItem);
+            this.close();
+            console.log("POST SUCCESS", response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+            console.log("POST GAGAL", error);
+          });
+      }
     },
   },
   mounted() {
