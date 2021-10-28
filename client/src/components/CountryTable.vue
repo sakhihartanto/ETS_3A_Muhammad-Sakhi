@@ -223,6 +223,7 @@ export default {
             this.editItem(name);
             this.close();
             console.log("UPDATE SUCCESS", response.data);
+            window.location.reload();
           })
           .catch((error) => {
             console.log(error);
@@ -237,6 +238,8 @@ export default {
             this.country.push(this.editedItem);
             this.close();
             console.log("POST SUCCESS", response.data);
+            window.location.reload();
+
           })
           .catch((error) => {
             console.log(error);
